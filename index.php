@@ -2,15 +2,18 @@
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserController;
+use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__.'/vendor/autoload.php';
 
 $response = null;
 
-$uri = rtrim(ltrim($_SERVER['REQUEST_URI'], '/'), '?');
+$request = Request::createFromGlobals();
+
+$path = $request->getPathInfo();
 
 // просто маршрутизатор
-switch ($uri) {
+switch ($request->getPathInfo()) {
     case 'user':
         $response = (new UserController)->index();
         break;
