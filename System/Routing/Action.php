@@ -21,7 +21,10 @@ class Action
             throw new \InvalidArgumentException('Invalid handler received.');
         }
 
-        [$controller, $action] = explode('@', $handler);
+        $data = explode('@', $handler);
+
+        $controller = $data[0];
+        $action = $data[1] ?? null;
 
         return function (Request $request) use ($controller, $action) {
             return $action ? (new $controller)->$action($request) : (new $controller)($request);
