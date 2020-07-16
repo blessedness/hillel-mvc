@@ -20,6 +20,16 @@ class User extends Model
         }
     }
 
+    public function findById(int $id)
+    {
+        $sql = 'select * from user WHERE id = :id';
+
+        $stmt = $this->getPdo()->prepare($sql);
+        $stmt->execute(compact('id'));
+
+        return $stmt->fetchObject();
+    }
+
     public function all()
     {
         $sql = 'select * from user ORDER BY created_at DESC';

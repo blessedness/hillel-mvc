@@ -17,6 +17,13 @@ class UserController extends Controller
         return $this->render('user/index', compact('users'));
     }
 
+    public function view(int $id)
+    {
+        $user = (new User())->findById($id);
+
+        return $this->render('user/view', compact('user'));
+    }
+
     public function create()
     {
         $form = (new UserRequest);
