@@ -20,7 +20,7 @@ class UrlManager
         $this->rules = $rules;
     }
 
-    public function match(Request $request)
+    public function match(Request $request): UrlResult
     {
         foreach ($this->rules->getRules() as $rule) {
             if (!empty($rule->methods) && !in_array($request->getMethod(), $rule->methods, true)) {
@@ -36,9 +36,9 @@ class UrlManager
             if (preg_match('~^'.$pattern.'$~i', $request->getPathInfo(), $matches)) {
                 return new UrlResult($rule->name, $rule->handler, array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY));
             }
-
-            throw new RequestNotMatchedException($request);
         }
+
+        throw new RequestNotMatchedException($request);
     }
 
     public function generate(string $name, array $params = [])
@@ -61,11 +61,11 @@ class UrlManager
                 return $value;
             }, $rule->pattern);
 
-            if (!$url) {
-                throw new RouteNotFoundException($name, $attributes);
+            if (!is_null($url)) {
+                return $url;
             }
-
-            return $url;
         }
+
+        throw new RouteNotFoundException($name, $attributes);
     }
 }

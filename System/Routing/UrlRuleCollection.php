@@ -11,19 +11,24 @@ class UrlRuleCollection
      */
     private $rules = [];
 
+    public function add(UrlRule $rule): void
+    {
+        $this->rules[] = $rule;
+    }
+
     public function any(string $name, string $pattern, $handler, array $tokens = []): void
     {
-        $this->rules[] = new UrlRule($name, $pattern, $handler, [], $tokens);
+        $this->add(new UrlRule($name, $pattern, $handler, [], $tokens));
     }
 
     public function get(string $name, string $pattern, $handler, array $tokens = []): void
     {
-        $this->rules[] = new UrlRule($name, $pattern, $handler, ['GET'], $tokens);
+        $this->add(new UrlRule($name, $pattern, $handler, ['GET'], $tokens));
     }
 
     public function post(string $name, string $pattern, $handler, array $tokens = []): void
     {
-        $this->rules[] = new UrlRule($name, $pattern, $handler, ['POST'], $tokens);
+        $this->add(new UrlRule($name, $pattern, $handler, ['POST'], $tokens));
     }
 
     /**
