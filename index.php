@@ -3,9 +3,10 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserController;
 use Symfony\Component\HttpFoundation\Request;
-use System\Routing\Action;
-use System\Routing\UrlManager;
+use System\Contracts\RenderInterface;
 use System\Routing\UrlRuleCollection;
+use System\Web\Application;
+use System\Web\View;
 
 require_once __DIR__.'/vendor/autoload.php';
 
@@ -22,23 +23,13 @@ $rules->get('user-view', '/user/{id}', function (Request $request) {
     return (new UserController)->view($id, $request);
 }, ['id' => '\d+']);
 
-$urlManager = new UrlManager($rules);
+$config = [
+    'rules' => $rules,
+    'components' => [
+        RenderInterface::class => [
+            'class' => \System\Web\TwigView::class,
+        ],
+    ],
+];
 
-$request = Request::createFromGlobals();
-
-
-try {
-    $result = $urlManager->match($request);
-    $request->attributes->add($result->getAttributes());
-
-    $action = (new Action())->resolve(
-        $result->getHandler()
-    );
-
-    $response = $action($request);
-} catch (Throwable $exception) {
-    dd($exception);
-}
-
-echo $response;
-exit();
+(new Application($config))->run();

@@ -4,10 +4,21 @@ declare(strict_types=1);
 
 namespace System\Routing;
 
-use Symfony\Component\HttpFoundation\Request;
+use System\BaseController;
+use System\Container\ContainerInterface;
 
 class Action
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @param  string|\Closure  $handler
      */
@@ -23,11 +34,14 @@ class Action
 
         $data = explode('@', $handler);
 
-        $controller = $data[0];
+        /** @var BaseController $controller */
+        $controller = $this->container->get($data[0]);
+        $controller->setContainer($this->container);
+
         $action = $data[1] ?? null;
 
-        return function (Request $request) use ($controller, $action) {
-            return $action ? (new $controller)->$action($request) : (new $controller)($request);
+        return function () use ($controller, $action) {
+            return $action ? $controller->$action() : ($controller)();
         };
     }
 }

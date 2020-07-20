@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace System\Web;
 
-use System\Contracts\Render;
+use System\Contracts\RenderInterface;
 
-class View implements Render
+class View implements RenderInterface
 {
     public $layout = 'layouts/main';
 

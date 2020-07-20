@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace System\Contracts;
 
-interface Render
+interface RenderInterface
 {
     /**
      * Рендеринг файла шаблона
