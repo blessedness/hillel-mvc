@@ -4,15 +4,28 @@ declare(strict_types=1);
 
 namespace System;
 
+use System\Container\ContainerInterface;
 use System\Contracts\Render;
-use System\Web\Request;
 
 abstract class BaseController
 {
     /**
-     * @var Render
+     * @var ContainerInterface
      */
-    protected $renderer;
+    private $container;
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
 
     /**
      * Метод для рендеринга файла шаблона
@@ -23,6 +36,6 @@ abstract class BaseController
      */
     protected function render(string $view, array $params = [])
     {
-        return $this->renderer->renderView($view, $params);
+        return $this->getContainer()->get(Render::class)->renderView($view, $params);
     }
 }

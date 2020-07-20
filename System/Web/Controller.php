@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace System\Web;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use System\BaseController;
 
 class Controller extends BaseController
 {
-    /**
-     * @var Request
-     */
-    private $request;
-
-    public function __construct()
+    public function render(string $view, array $params = []): Response
     {
-        $this->renderer = new View();
-        $this->request = new Request();
+        return new Response(
+            parent::render($view, $params)
+        );
     }
 
     /**
@@ -24,12 +22,12 @@ class Controller extends BaseController
      */
     public function getRequest(): Request
     {
-        return $this->request;
+        return $this->getContainer()->get(Request::class);
     }
 
     public function redirect(string $path)
     {
-        header('Location: ' . $path);
+        header('Location: '.$path);
         exit;
     }
 }
