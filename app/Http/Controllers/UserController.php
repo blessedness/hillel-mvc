@@ -6,10 +6,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\Users\User;
+use Symfony\Component\HttpFoundation\Request;
 use System\Web\Controller;
 
 class UserController extends Controller
 {
+    /**
+     * @var Request
+     */
+    private $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function index()
     {
         $users = (new User())->all();
@@ -28,7 +39,7 @@ class UserController extends Controller
     {
         $form = (new UserRequest);
 
-        if ($this->getRequest()->getMethod() === 'POST' && $form->validate()) {
+        if ($this->request->getMethod() === 'POST' && $form->validate()) {
             (new User())->create($form->getFields());
 
             $this->redirect('/user');
